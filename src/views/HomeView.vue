@@ -1,6 +1,6 @@
 <script setup>
 import { from, fromEvent, useSubscription } from '@vueuse/rxjs'
-import { interval } from 'rxjs'
+import { interval, scan } from 'rxjs'
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators'
 import { shallowRef, useTemplateRef } from 'vue'
 
@@ -28,10 +28,18 @@ const button = useTemplateRef('buttonRef')
 // )
 
 // 建立訂閱
+// useSubscription(
+//   fromEvent(document, 'click', { passive: true }).subscribe(() => {
+//     console.log('Clicked!')
+//   }),
+// )
+
 useSubscription(
-  fromEvent(document, 'click', { passive: true }).subscribe(() => {
-    console.log('Clicked!')
-  }),
+  fromEvent(document, 'click')
+    .pipe(scan((count) => count + 1, 0))
+    .subscribe((count) => {
+      console.log('計數值：', count)
+    }),
 )
 </script>
 
