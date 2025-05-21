@@ -1,16 +1,17 @@
 <script setup>
 import { from, fromEvent, useSubscription } from '@vueuse/rxjs'
 import { interval } from 'rxjs'
-import { map, mapTo, takeUntil, withLatestFrom } from 'rxjs/operators'
+import { map, takeUntil, withLatestFrom } from 'rxjs/operators'
 import { shallowRef, useTemplateRef } from 'vue'
 
 const count = shallowRef(0)
 const button = useTemplateRef('buttonRef')
 
+// 計數器
 useSubscription(
   interval(1000)
     .pipe(
-      mapTo(1),
+      map(() => 1),
       takeUntil(fromEvent(button, 'click', { passive: true })),
       withLatestFrom(
         from(count, {
